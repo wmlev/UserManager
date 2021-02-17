@@ -125,7 +125,6 @@ class UserLoginById extends UserLogin
         $this->authProcess();
         $this->checkRemember();
         $this->clearActiveUsers();
-        $this->writeLog();
 
         if ($this->events) {
             // invoke OnManagerLogin event
@@ -328,12 +327,6 @@ class UserLoginById extends UserLogin
                 );
             }
         }
-    }
-
-    public function writeLog()
-    {
-        $log = new \EvolutionCMS\Legacy\LogHandler();
-        $log->initAndWriteLog('Logged in', EvolutionCMS()->getLoginUserID('mgr'), $_SESSION['mgrShortname'], '58', '-', 'EVO');
     }
 
     public function incrementFailedLoginCount(): void
