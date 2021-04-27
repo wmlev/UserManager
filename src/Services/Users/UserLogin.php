@@ -116,7 +116,7 @@ class UserLogin implements UserServiceInterface
             EvolutionCMS()->invokeEvent('OnBeforeManagerLogin', array(
                 'username' => $this->userData['username'],
                 'userpassword' => $this->userData['password'],
-                'rememberme' => $this->userData['rememberme']
+                'rememberme' => $this->userData['rememberme'] ?? false
             ));
         }
 
@@ -139,7 +139,7 @@ class UserLogin implements UserServiceInterface
                 'userid' => $this->user->getKey(),
                 'username' => $this->user->username,
                 'userpassword' => $this->userData['password'],
-                'rememberme' => $this->userData['rememberme']
+                'rememberme' => $this->userData['rememberme'] ?? false
             ));
         }
 
@@ -301,7 +301,7 @@ class UserLogin implements UserServiceInterface
     public function checkRemember()
     {
 
-        if ($this->userData['rememberme'] == 1) {
+        if (isset($this->userData['rememberme']) && $this->userData['rememberme'] == 1) {
             $_SESSION['modx.' . $this->context . '.session.cookie.lifetime'] = (int)EvolutionCMS()->getConfig('session.cookie.lifetime');
 
             // Set a cookie separate from the session cookie with the username in it.

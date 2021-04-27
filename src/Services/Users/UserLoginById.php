@@ -293,7 +293,7 @@ class UserLoginById extends UserLogin
     public function checkRemember()
     {
 
-        if ($this->userData['rememberme'] == 1) {
+        if (isset($this->userData['rememberme']) && $this->userData['rememberme'] == 1) {
             $_SESSION['modx.' . $this->context . '.session.cookie.lifetime'] = (int)EvolutionCMS()->getConfig('session.cookie.lifetime');
 
             // Set a cookie separate from the session cookie with the username in it.
