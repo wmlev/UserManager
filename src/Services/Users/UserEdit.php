@@ -40,6 +40,11 @@ class UserEdit implements UserServiceInterface
     public $validateErrors;
 
     /**
+     * @var string
+     */
+    private $context;
+
+    /**
      * UserRegistration constructor.
      * @param array $userData
      * @param bool $events
@@ -47,6 +52,7 @@ class UserEdit implements UserServiceInterface
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
+        $this->context = evo()->getContext();
         $this->userData = $userData;
         $this->events = $events;
         $this->cache = $cache;
@@ -145,7 +151,7 @@ class UserEdit implements UserServiceInterface
      */
     public function checkRules(): bool
     {
-        return ($_SESSION['mgrInternalKey'] == $this->userData['id'] || EvolutionCMS()->hasPermission('save_user'));
+        return ($_SESSION[$this->context . 'InternalKey'] == $this->userData['id'] || EvolutionCMS()->hasPermission('save_user'));
     }
 
     /**

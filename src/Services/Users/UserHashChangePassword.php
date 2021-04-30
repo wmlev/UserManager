@@ -38,6 +38,10 @@ class UserHashChangePassword implements UserServiceInterface
      */
     public $validateErrors;
 
+    /**
+     * @var string
+     */
+    private $context;
 
     /**
      * UserRegistration constructor.
@@ -47,6 +51,7 @@ class UserHashChangePassword implements UserServiceInterface
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
+        $this->context = evo()->getContext();
         $this->validate = $this->getValidationRules();
         $this->messages = $this->getValidationMessages();
         $this->userData = $userData;
@@ -107,7 +112,7 @@ class UserHashChangePassword implements UserServiceInterface
         // invoke OnManagerChangePassword event
         EvolutionCMS()->invokeEvent('OnUserChangePassword', array(
             'userid' => $this->userData['id'],
-            'username' => $_SESSION['mgrShortname'],
+            'username' => $_SESSION[$this->context. 'Shortname'],
             'userpassword' => $this->userData['password']
         ));
         return $user;

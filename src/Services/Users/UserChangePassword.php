@@ -38,6 +38,10 @@ class UserChangePassword implements UserServiceInterface
      */
     public $validateErrors;
 
+    /**
+     * @var string
+     */
+    private $context;
 
     /**
      * UserRegistration constructor.
@@ -47,6 +51,7 @@ class UserChangePassword implements UserServiceInterface
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
+        $this->context = evo()->getContext();
         $this->validate = $this->getValidationRules();
         $this->messages = $this->getValidationMessages();
         $this->userData = $userData;
@@ -99,7 +104,6 @@ class UserChangePassword implements UserServiceInterface
         }
 
 
-
         $password = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
         $user = \EvolutionCMS\Models\User::find($this->userData['id']);
 
@@ -114,7 +118,7 @@ class UserChangePassword implements UserServiceInterface
         } else {
             $matchPassword = false;
         }
-        if($matchPassword == false){
+        if ($matchPassword == false) {
             throw new ServiceActionException(\Lang::get('global.login_processor_wrong_password'));
         }
 
@@ -125,7 +129,7 @@ class UserChangePassword implements UserServiceInterface
         // invoke OnManagerChangePassword event
         EvolutionCMS()->invokeEvent('OnUserChangePassword', array(
             'userid' => $this->userData['id'],
-            'username' => $_SESSION['mgrShortname'],
+            'username' => $_SESSION[$this->context . 'Shortname'],
             'userpassword' => $this->userData['password']
         ));
         return $user;

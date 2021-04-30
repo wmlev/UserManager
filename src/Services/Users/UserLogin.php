@@ -59,6 +59,10 @@ class UserLogin implements UserServiceInterface
     private $userSettings;
 
     /**
+     * @var string
+     */
+    private $context;
+    /**
      * UserRegistration constructor.
      * @param array $userData
      * @param bool $events
