@@ -103,7 +103,7 @@ class UserDelete implements UserServiceInterface
 
         // delete the user.
         \EvolutionCMS\Models\User::destroy($this->userData['id']);
-
+        \EvolutionCMS\Models\UserValue::query()->where('userid', $this->userData['id'])->delete();
         if ($this->events) {
             // invoke OnWebDeleteUser event
             EvolutionCMS()->invokeEvent("OnWebDeleteUser",
