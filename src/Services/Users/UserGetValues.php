@@ -98,10 +98,6 @@ class UserGetValues implements UserServiceInterface
             ->pluck('value', 'name')
             ->toArray();
 
-        if ($this->cache) {
-            EvolutionCMS()->clearCache('full');
-        }
-
         return $values;
     }
 
