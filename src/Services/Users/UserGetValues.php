@@ -44,7 +44,7 @@ class UserGetValues implements UserServiceInterface
      * @param bool $events
      * @param bool $cache
      */
-    public function __construct(array $userData, bool $events = true, bool $cache = true)
+    public function __construct(array $userData, bool $events = false, bool $cache = false)
     {
         $this->userData = $userData;
         $this->events = $events;
