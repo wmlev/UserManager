@@ -140,9 +140,6 @@ class UserLogout implements UserServiceInterface
                     ));
             }
         }
-        //if (isset($_COOKIE[session_name()])) {
-        //    setcookie(session_name(), '', 0, MODX_BASE_URL);
-        //}
 
         $this->safelyDestroyUserSession();
 
