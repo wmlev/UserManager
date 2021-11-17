@@ -26,9 +26,7 @@ trait SafelyDestroyUserSessionTrait
         }
 
         foreach ($this->userSessionFields as $field) {
-            if (isset($_SESSION[$this->context . $field])) {
-                unset($_SESSION[$this->context . $field]);
-            }
+            unset($_SESSION[$this->context . $field]);
         }
     }
 }
