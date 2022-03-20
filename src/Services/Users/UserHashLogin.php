@@ -46,7 +46,7 @@ class UserHashLogin extends UserLogin
     /**
      * @var
      */
-    private $userSettings;
+    protected $userSettings;
 
 
     /**
