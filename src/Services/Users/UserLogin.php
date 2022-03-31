@@ -348,11 +348,7 @@ class UserLogin implements UserServiceInterface
             global $https_port;
 
             $secure = ((isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
-            if (version_compare(PHP_VERSION, '5.2', '<')) {
-                setcookie('modx_remember_manager', $_SESSION[$this->context . 'Shortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, '; HttpOnly', $secure);
-            } else {
-                setcookie('modx_remember_manager', $_SESSION[$this->context . 'Shortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, NULL, $secure, true);
-            }
+            setcookie('modx_remember_manager', $_SESSION[$this->context . 'Shortname'], time() + 60 * 60 * 24 * 365, MODX_BASE_URL, '', $secure, true);
         } else {
             $_SESSION['modx.' .$this->context . '.session.cookie.lifetime'] = 0;
 
