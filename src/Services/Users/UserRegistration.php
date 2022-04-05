@@ -61,7 +61,7 @@ class UserRegistration implements UserServiceInterface
         return [
             'username' => ['required', 'unique:users'],
             'password' => ['required', 'min:6', 'confirmed'],
-            'email' => ['required', 'unique:user_attributes'],
+            'email' => ['required', 'email', 'unique:user_attributes'],
         ];
     }
 
