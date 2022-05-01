@@ -40,9 +40,9 @@ class UserRegistration implements UserServiceInterface
 
     /**
      * UserRegistration constructor.
-     * @param array $userData
-     * @param bool $events
-     * @param bool $cache
+     * @param  array  $userData
+     * @param  bool  $events
+     * @param  bool  $cache
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
@@ -61,7 +61,7 @@ class UserRegistration implements UserServiceInterface
         return [
             'username' => ['required', 'unique:users'],
             'password' => ['required', 'min:6', 'confirmed'],
-            'email' => ['required', 'email', 'unique:user_attributes'],
+            'email'    => ['required', 'email:rfc', 'unique:user_attributes'],
         ];
     }
 
@@ -71,13 +71,14 @@ class UserRegistration implements UserServiceInterface
     public function getValidationMessages(): array
     {
         return [
-            'username.required' => Lang::get("global.required_field", ['field' => 'username']),
-            'password.required' => Lang::get("global.required_field", ['field' => 'password']),
+            'username.required'  => Lang::get("global.required_field", ['field' => 'username']),
+            'password.required'  => Lang::get("global.required_field", ['field' => 'password']),
             'password.confirmed' => Lang::get("global.password_confirmed", ['field' => 'password']),
-            'email.required' => Lang::get("global.required_field", ['field' => 'email']),
-            'password.min' => Lang::get("global.password_gen_length"),
-            'username.unique' => Lang::get('global.username_unique'),
-            'email.unique' => Lang::get('global.email_unique'),
+            'email.required'     => Lang::get("global.required_field", ['field' => 'email']),
+            'email.email'        => Lang::get("validation.email", ['attribute' => 'email']),
+            'password.min'       => Lang::get("global.password_gen_length"),
+            'username.unique'    => Lang::get('global.username_unique'),
+            'email.unique'       => Lang::get('global.email_unique'),
         ];
     }
 
@@ -94,10 +95,10 @@ class UserRegistration implements UserServiceInterface
 
         // invoke OnBeforeUserFormSave event
         if ($this->events) {
-            EvolutionCMS()->invokeEvent("OnBeforeUserSave", array(
+            EvolutionCMS()->invokeEvent("OnBeforeUserSave", [
                 "mode" => "new",
                 "user" => &$this->userData,
-            ));
+            ]);
         }
 
         if (!$this->validate()) {
@@ -110,7 +111,9 @@ class UserRegistration implements UserServiceInterface
         $this->userData['clearPassword'] = $this->userData['password'];
         $this->userData['password'] = EvolutionCMS()->getPasswordHash()->HashPassword($this->userData['password']);
         if (isset($this->userData['dob'])) {
-            if (!is_numeric($this->userData['dob'])) $this->userData['dob'] = null;
+            if (!is_numeric($this->userData['dob'])) {
+                $this->userData['dob'] = null;
+            }
         }
 
         $user = User::create($this->userData);
@@ -119,14 +122,14 @@ class UserRegistration implements UserServiceInterface
 
         // invoke OnWebSaveUser event
         if ($this->events) {
-            EvolutionCMS()->invokeEvent("OnUserFormSave", array(
-                "mode" => "new",
-                "userid" => $user->getKey(),
-                "username" => $user->username,
+            EvolutionCMS()->invokeEvent("OnUserFormSave", [
+                "mode"         => "new",
+                "userid"       => $user->getKey(),
+                "username"     => $user->username,
                 "userpassword" => $this->userData['clearPassword'],
-                "useremail" => $user->attributes->email,
+                "useremail"    => $user->attributes->email,
                 "userfullname" => $user->attributes->fullname
-            ));
+            ]);
         }
 
         if ($this->cache) {
@@ -149,7 +152,7 @@ class UserRegistration implements UserServiceInterface
      */
     public function validate(): bool
     {
-        $validator = \Validator::make($this->userData, $this->validate, $this->messages);
+        $validator = \Validator::validate($this->userData, $this->validate, $this->messages);
         $this->validateErrors = $validator->errors()->toArray();
         return !$validator->fails();
     }

@@ -46,9 +46,9 @@ class UserEdit implements UserServiceInterface
 
     /**
      * UserRegistration constructor.
-     * @param array $userData
-     * @param bool $events
-     * @param bool $cache
+     * @param  array  $userData
+     * @param  bool  $events
+     * @param  bool  $cache
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
@@ -66,10 +66,12 @@ class UserEdit implements UserServiceInterface
     public function getValidationRules(): array
     {
         return [
-            'id' => ['required'],
-            'username' => [Rule::unique('users')->ignore($this->userData['id'])],
+            'id'       => ['required'],
+            'username' => ['filled', Rule::unique('users')->ignore($this->userData['id'])],
             'password' => ['min:6', 'confirmed'],
-            'email' => [Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')],
+            'email'    => [
+                'filled', 'email:rfc', Rule::unique('user_attributes')->ignore($this->userData['id'], 'internalKey')
+            ],
         ];
     }
 
@@ -79,11 +81,12 @@ class UserEdit implements UserServiceInterface
     public function getValidationMessages(): array
     {
         return [
-            'id.required' => Lang::get("global.required_field", ['field' => 'username']),
+            'id.required'        => Lang::get("global.required_field", ['field' => 'username']),
             'password.confirmed' => Lang::get("global.password_confirmed", ['field' => 'password']),
-            'password.min' => Lang::get("global.password_gen_length"),
-            'username.unique' => Lang::get('global.username_unique'),
-            'email.unique' => Lang::get('global.email_unique'),
+            'password.min'       => Lang::get("global.password_gen_length"),
+            'email.email'        => Lang::get("validation.email", ['attribute' => 'email']),
+            'username.unique'    => Lang::get('global.username_unique'),
+            'email.unique'       => Lang::get('global.email_unique'),
         ];
     }
 
@@ -100,10 +103,10 @@ class UserEdit implements UserServiceInterface
 
         // invoke OnBeforeUserFormSave event
         if ($this->events) {
-            EvolutionCMS()->invokeEvent("OnBeforeUserSave", array(
+            EvolutionCMS()->invokeEvent("OnBeforeUserSave", [
                 "mode" => "upd",
                 "user" => &$this->userData,
-            ));
+            ]);
         }
 
         if (!$this->validate()) {
@@ -121,7 +124,8 @@ class UserEdit implements UserServiceInterface
             $this->userData['dob'] = strtotime($this->userData['dob']);
         }
         foreach ($this->userData as $attribute => $value) {
-            if (in_array($attribute, $user->attributes->getFillable()) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
+            if (in_array($attribute,
+                    $user->attributes->getFillable()) && $attribute != 'id' && $attribute != 'internalKey' && $attribute != 'role') {
                 $user->attributes->{$attribute} = $value;
             }
         }
@@ -129,14 +133,14 @@ class UserEdit implements UserServiceInterface
 
         // invoke OnWebSaveUser event
         if ($this->events) {
-            EvolutionCMS()->invokeEvent("OnUserFormSave", array(
-                "mode" => "upd",
-                "userid" => $user->getKey(),
-                "username" => $user->username,
+            EvolutionCMS()->invokeEvent("OnUserFormSave", [
+                "mode"         => "upd",
+                "userid"       => $user->getKey(),
+                "username"     => $user->username,
                 "userpassword" => isset($this->userData['clearPassword']) ? $this->userData['clearPassword'] : '',
-                "useremail" => $user->attributes->email,
+                "useremail"    => $user->attributes->email,
                 "userfullname" => $user->attributes->fullname
-            ));
+            ]);
         }
 
         if ($this->cache) {
