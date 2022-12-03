@@ -98,6 +98,7 @@ class UserRegistration implements UserServiceInterface
             EvolutionCMS()->invokeEvent("OnBeforeUserSave", [
                 "mode" => "new",
                 "user" => &$this->userData,
+                'username' => $this->userData['username']
             ]);
         }
 

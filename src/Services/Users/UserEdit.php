@@ -104,8 +104,10 @@ class UserEdit implements UserServiceInterface
         // invoke OnBeforeUserFormSave event
         if ($this->events) {
             EvolutionCMS()->invokeEvent("OnBeforeUserSave", [
-                "mode" => "upd",
-                "user" => &$this->userData,
+                "mode"     => "upd",
+                "user"     => &$this->userData,
+                'userid'   => $this->userData['id'],
+                "username" => $this->userData['username'],
             ]);
         }
 

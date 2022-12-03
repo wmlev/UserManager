@@ -58,6 +58,7 @@ class UserLoginById extends UserLogin
             // invoke OnBeforeManagerLogin event
             EvolutionCMS()->invokeEvent('OnBeforeUserLogin', array(
                 'username' => $this->user->username,
+                'userpassword' => ''
             ));
         }
 
