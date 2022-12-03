@@ -133,7 +133,7 @@ class UserEdit implements UserServiceInterface
 
         // invoke OnWebSaveUser event
         if ($this->events) {
-            EvolutionCMS()->invokeEvent("OnUserFormSave", [
+            EvolutionCMS()->invokeEvent("OnUserSave", [
                 "mode"         => "upd",
                 "user"         => $this->userData,
                 "userid"       => $user->getKey(),
