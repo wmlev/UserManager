@@ -125,7 +125,7 @@ class UserRegistration implements UserServiceInterface
             EvolutionCMS()->invokeEvent("OnUserSave", [
                 "mode"         => "new",
                 "userid"       => $user->getKey(),
-                'user'         => $this->userData,
+                "user"         => $this->userData,
                 "username"     => $user->username,
                 "userpassword" => $this->userData['clearPassword'],
                 "useremail"    => $user->attributes->email,

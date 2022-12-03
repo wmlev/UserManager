@@ -135,8 +135,8 @@ class UserEdit implements UserServiceInterface
         if ($this->events) {
             EvolutionCMS()->invokeEvent("OnUserSave", [
                 "mode"         => "upd",
-                "user"         => $this->userData,
                 "userid"       => $user->getKey(),
+                "user"         => $this->userData,
                 "username"     => $user->username,
                 "userpassword" => isset($this->userData['clearPassword']) ? $this->userData['clearPassword'] : '',
                 "useremail"    => $user->attributes->email,
