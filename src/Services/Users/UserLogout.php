@@ -139,13 +139,15 @@ class UserLogout implements UserServiceInterface
                         "username" => $username
                     ));
             }
+
+            $this->safelyDestroyUserSession();
+
+            \EvolutionCMS\Models\ActiveUserLock::query()->where('sid', $sid)->delete();
+
+            \EvolutionCMS\Models\ActiveUserSession::query()->where('sid', $sid)->delete();
         }
 
-        $this->safelyDestroyUserSession();
-
-        \EvolutionCMS\Models\ActiveUserLock::query()->where('sid', $sid)->delete();
-
-        \EvolutionCMS\Models\ActiveUserSession::query()->where('sid', $sid)->delete();
+        
 
         if ($this->events) {
             // invoke OnManagerLogout event
